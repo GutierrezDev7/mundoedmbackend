@@ -20,6 +20,9 @@ app.use("/api/youtube", youtubeRouter);
 app.use("/api/content", contentRouter);
 app.use("/api/auth", authRouter);
 
+app.get("/", (_req, res) => {
+  res.redirect(302, "/api/health");
+});
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });

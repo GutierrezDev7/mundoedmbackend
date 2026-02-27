@@ -5,7 +5,7 @@ node_modules/
 dist/
 build/
 *.tsbuildinfo
-
+ 
 # Ambiente
 .env
 .env.local
