@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Selection {
+  id        Int      @id @default(autoincrement())
+  section   String   @db.VarChar(50)
+  videoId   String   @map("video_id") @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([section, videoId])
+  @@index([section])
+  @@map("selections")
+}
+
+enum Platform {
+  instagram
+  tiktok
+  youtube
+  whatsapp
+}
+
+model SocialLink {
+  id        String   @id @db.VarChar(50)
+  name      String   @db.VarChar(100)
+  href      String   @db.Text
+  platform  Platform
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("social_links")
+}
+
+model YtCache {
+  cacheKey  String   @id @map("cache_key") @db.VarChar(100)
+  data      Json
+  fetchedAt DateTime @default(now()) @map("fetched_at")
+  expiresAt DateTime @map("expires_at")
+
+  @@index([expiresAt])
+  @@map("yt_cache")
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique @db.VarChar(100)
+  passwordHash String   @map("password_hash") @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("admin_users")
+}
