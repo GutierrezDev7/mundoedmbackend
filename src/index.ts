@@ -10,7 +10,10 @@ import { cleanExpiredCache } from "./db/cache.js";
 const app = express();
 const PORT = Number(process.env.PORT) || 4000;
 
-app.use(cors({ origin: ["http://localhost:3000", "http://127.0.0.1:3000"] }));
+const corsOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(",").map((u) => u.trim())
+  : ["http://localhost:3000", "http://127.0.0.1:3000"];
+app.use(cors({ origin: corsOrigins }));
 app.use(express.json());
 
 app.use("/api/youtube", youtubeRouter);
