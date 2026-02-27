@@ -1,12 +1,5 @@
 import { Router } from "express";
-import {
-  getSelectedIds,
-  saveSelectedIds,
-  getSocialLinks,
-  addSocialLink,
-  updateSocialLink,
-  deleteSocialLink,
-} from "../store/store.js";
+import { getSelectedIds, saveSelectedIds } from "../store/store.js";
 import { getVideos, getShorts, getPlaylists } from "../services/youtube.js";
 
 export const contentRouter = Router();
@@ -121,51 +114,6 @@ contentRouter.post("/playlists", async (req, res) => {
     }
     await saveSelectedIds("playlists", videoIds);
     res.json({ success: true, count: videoIds.length });
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    res.status(500).json({ error: message });
-  }
-});
-
-// ── Social (CRUD with PostgreSQL) ──
-
-contentRouter.get("/social", async (_req, res) => {
-  try {
-    const links = await getSocialLinks();
-    res.json(links);
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    res.status(500).json({ error: message });
-  }
-});
-
-contentRouter.post("/social", async (req, res) => {
-  try {
-    const { name, href, platform } = req.body;
-    const created = await addSocialLink({ name, href, platform });
-    res.status(201).json(created);
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    res.status(500).json({ error: message });
-  }
-});
-
-contentRouter.put("/social/:id", async (req, res) => {
-  try {
-    const updated = await updateSocialLink(req.params.id, req.body);
-    if (!updated) return res.status(404).json({ error: "Not found" });
-    res.json(updated);
-  } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    res.status(500).json({ error: message });
-  }
-});
-
-contentRouter.delete("/social/:id", async (req, res) => {
-  try {
-    const deleted = await deleteSocialLink(req.params.id);
-    if (!deleted) return res.status(404).json({ error: "Not found" });
-    res.json({ success: true });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Unknown error";
     res.status(500).json({ error: message });

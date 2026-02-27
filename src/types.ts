@@ -13,10 +13,3 @@ export interface YouTubePlaylist {
   youtubeUrl: string;
   itemCount: number;
 }
-
-export interface SocialLink {
-  id: string;
-  name: string;
-  href: string;
-  platform: "instagram" | "tiktok" | "youtube" | "whatsapp";
-}
