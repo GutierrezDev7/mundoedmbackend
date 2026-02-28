@@ -1,0 +1,9 @@
+# Força install + build explícitos (evita cache antigo e "tsc: Permission denied")
+[phases.install]
+cmds = ["npm install"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm start"
