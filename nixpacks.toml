@@ -1,9 +1,9 @@
-# Força install + build explícitos (evita cache antigo e "tsc: Permission denied")
 [phases.install]
 cmds = ["npm install"]
 
+# Sem passo de build (projeto usa node index.js, não TypeScript)
 [phases.build]
-cmds = ["npm run build"]
+cmds = []
 
 [start]
 cmd = "npm start"
