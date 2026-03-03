@@ -66,20 +66,21 @@ O servidor sobe em `http://localhost:4000`. O frontend usa `NEXT_PUBLIC_API_URL=
 
 ## Deploy no Railway
 
-1. **Crie um projeto** em [railway.app](https://railway.app) e conecte o repositório (ou faça deploy da pasta `backendedm`).
+1. **Crie um serviço** em [railway.app](https://railway.app) e conecte o repositório.
+2. **Defina a pasta do backend como raiz do deploy:** em Settings do serviço, use **Root Directory** = `backendedm`. Se não definir, o Railway pode usar a raiz do repo (onde está o Next.js) e aí o serviço vai rodar o frontend em vez da API — e `/api/health` dará 404.
 
-2. **Variáveis de ambiente** — na aba Variables do serviço, configure:
+3. **Variáveis de ambiente** — na aba Variables do serviço, configure:
    - `JWT_SECRET` = uma string longa e aleatória (ex.: gere com `openssl rand -hex 32`)
    - `YOUTUBE_API_KEY` = chave da YouTube Data API v3
    - `YOUTUBE_CHANNEL_ID` = ID do canal Mundo EDM  
    - O Railway já define `PORT` automaticamente; não precisa setar.
 
-3. **Persistência (banco SQLite)** — o disco do Railway é efêmero. Para manter o banco (login admin, conteúdo e cache do YouTube):
+4. **Persistência (banco SQLite)** — o disco do Railway é efêmero. Para manter o banco (login admin, conteúdo e cache do YouTube):
    - No projeto Railway, adicione um **Volume** ao serviço.
    - Monte o volume no caminho `/data`.
    - Adicione a variável `DATA_DIR=/data`.
    O arquivo `mundoedm.db` será criado em `/data` e persistirá entre redeploys. Na primeira execução o usuário `mundoedm` com senha `04021991` é criado automaticamente.
 
-4. **URL do backend** — após o deploy, Railway gera uma URL (ex. `https://backendedm-production-xxxx.up.railway.app`). No frontend (Vercel ou onde estiver), configure:
-   - `NEXT_PUBLIC_API_URL=https://sua-url-do-railway.up.railway.app`
+5. **URL do backend** — após o deploy, Railway gera uma URL (ex. `https://mundoedm-backend-production-xxxx.up.railway.app`). **Teste no navegador:** abra `https://SUA-URL/api/health`; deve retornar `{"ok":true}`. Se retornar 404, confira o Root Directory (deve ser `backendedm`). No frontend (Vercel ou outro), configure:
+   - `NEXT_PUBLIC_API_URL=https://sua-url-do-backend.railway.app` (sem barra no final)
    para que o site e o admin usem a API no Railway.

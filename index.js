@@ -12,6 +12,10 @@ const JWT_SECRET = process.env.JWT_SECRET || "change-me-in-production";
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.json({ name: "mundoedm-api", status: "ok", health: "/api/health" });
+});
+
 function authMiddleware(req, res, next) {
   const header = req.headers.authorization;
   if (!header || !header.startsWith("Bearer ")) {
