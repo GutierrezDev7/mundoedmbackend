@@ -1,5 +1,5 @@
 [phases.install]
-cmds = ["npm install"]
+cmds = ["npm install", "npm rebuild bcrypt"]
 
 # Sem passo de build (projeto usa node index.js, não TypeScript)
 [phases.build]
