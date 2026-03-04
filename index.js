@@ -10,9 +10,18 @@ const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET || "change-me-in-production";
 
 const corsOrigins = process.env.FRONTEND_URL
-  ? process.env.FRONTEND_URL.split(",").map((u) => u.trim())
-  : ["https://mundoedm.com.br"];
-const corsOpts = { origin: corsOrigins };
+  ? process.env.FRONTEND_URL.split(",").map((u) => u.trim().replace(/\/$/, ""))
+  : ["https://mundoedm.com.br", "https://www.mundoedm.com.br"];
+const corsOpts = {
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true);
+    const normalized = origin.replace(/\/$/, "");
+    if (corsOrigins.some((o) => normalized === o)) return cb(null, true);
+    return cb(null, false);
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+};
 
 app.use(cors(corsOpts));
 app.options("*", cors(corsOpts));
@@ -231,8 +240,7 @@ app.get("/api/youtube/playlists", async (req, res) => {
   }
 });
 
-db.getDb();
-
 app.listen(PORT, () => {
   console.log(`Backend Mundo EDM rodando em http://localhost:${PORT}`);
+  setImmediate(() => db.getDb());
 });
