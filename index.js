@@ -9,7 +9,13 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET || "change-me-in-production";
 
-app.use(cors());
+const corsOrigins = process.env.FRONTEND_URL
+  ? process.env.FRONTEND_URL.split(",").map((u) => u.trim())
+  : ["https://mundoedm.com.br"];
+const corsOpts = { origin: corsOrigins };
+
+app.use(cors(corsOpts));
+app.options("*", cors(corsOpts));
 app.use(express.json());
 
 app.get("/", (req, res) => {
